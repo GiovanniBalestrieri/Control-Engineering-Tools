@@ -26,15 +26,14 @@ Cj = sysC.c*Tm1
 % Kalman decomposition
 
 disp('Kalman decomposition:');
+disp('X');
+pause();
+
 [G,U]=minreal(sysM);
 Ak= U*sysM.a*U'
 Bk = U*sysM.b
 Ck = sysM.c*U'
 
-disp('Controllabity:');
-rank(ctrb(sysM.a,sysM.b))
-disp('Observability:');
-rank(obsv(sysM.a,sysM.c))
 
 %% Mimo system
 
