@@ -7,16 +7,21 @@ P = zpk([1.3 -2],[-1 -2 -8],1);
 sysM = canon(P,'modal');
 sysC = canon(P,'companion');
 %disp(sysC.a);
-%disp(sysM.a);
+disp('Realization of the following Transfer Function:');
+disp(P);
+disp('X');
+pause();
+disp(sysM.a);
 
 % Jordan Form of A
 
+disp('Jordan Form of A. Press X');
+pause();
 [Tm1,JM] = jordan(sysC.a);
 disp('Jordan Form:');
 JM
 Bj = Tm1\sysC.b
 Cj = sysC.c*Tm1
-%JC = jordan(sysC.a)
 
 % Kalman decomposition
 
@@ -32,6 +37,10 @@ disp('Observability:');
 rank(obsv(sysM.a,sysM.c))
 
 %% Mimo system
+
+disp('Let s consider a Mimo system. That s quadcopter dynamic system');
+disp('X');
+pause();
 If = 0.8;
 mq = 1.2;
 Ixx = 0.04;
@@ -69,9 +78,26 @@ tenzoMin = ss(AMin,BMin,ClocalMin,D,'statename',statesMin,'inputname',inputs,'ou
 
 %% Jordan form
 
+disp('Eigenvalues of A:');
+eig(tenzoMin.a)
+% dimensions of the null space of A-0*I
+rank(tenzoMin.a - eig(0)*eye(8))
+% Or you can get it from here
+size(null(tenzoMin.a - eig(0)*eye(8)),2)
+% This will be the number of Jordan block for eig 0.
+disp('X');
+pause();
 
 [Tm1,JM] = jordan(tenzoMin.a);
 disp('Jordan Form:');
 JM
 Bj = Tm1\tenzoMin.b
 Cj = tenzoMin.c*Tm1
+
+Cif = [Cj(:,1) Cj(:,2) Cj(:,3) Cj(:,5) Cj(:,7)]
+%% Proprietà strutturali
+
+disp('Controllabity:');
+rank(ctrb(tenzoMin.a,tenzoMin.b))
+disp('Observability:');
+rank(obsv(tenzoMin.a,tenzoMin.c))
