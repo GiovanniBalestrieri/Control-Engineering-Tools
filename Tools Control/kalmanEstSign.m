@@ -21,11 +21,13 @@ C = [1 0]; % measurement matrix: the expected measurement given the predicted st
 u = 1.5; % define acceleration magnitude
 Q= [0; 0]; %initized state--it has two components: [position; velocity] of the Quail
 Q_estimate = Q;  %x_estimate of initial location estimation of where the Quail is (what we are updating)
+Q_estimate1 = Q;
 QuailAccel_noise_mag = 0.05; %process noise: the variability in how fast the Quail is speeding up (stdv of acceleration: meters/sec^2)
 NinjaVision_noise_mag = 10;  %measurement noise: How mask-blinded is the Ninja (stdv of location, in meters)
 Ez = NinjaVision_noise_mag^2;% Ez convert the measurement noise (stdv) into covariance matrix
 Ex = QuailAccel_noise_mag^2 * [dt^4/4 dt^3/2; dt^3/2 dt^2]; % Ex convert the process noise (stdv) into covariance matrix
 P = Ex; % estimate of initial Quail position variance (covariance matrix)
+P1 = Ex;
 
 % initize result variables
 % Initialize for speed
@@ -53,52 +55,81 @@ for t = 0 : dt: duration
     plot(0:dt:t, Q_loc_meas, '-k.')
     axis([0 10 -30 80])
     hold on
-    pause
+    %pause
 end
 grid on
+
+
+
 %plot theoretical path of ninja that doesn't use kalman -> Moving average
 %with windows size = 5
-plot(0:dt:t, smooth(Q_loc_meas), '-g.')
+%plot(0:dt:t, smooth(Q_loc_meas), '-g.')
 %hold on
 %plot(0:dt:t, smooth(Q_loc_meas,dt,'rloess'), 'c');
 
 %% Do kalman filtering
 %initize estimation variables
 Q_loc_estimate = []; %  Quail position estimate
+Q_loc_estimate1 = [];
 vel_estimate = []; % Quail velocity estimate
+vel_estimate1 = [];
 Q= [0; 0]; % re-initized state
 P_estimate = P;
+P_estimate1 = P;
 P_mag_estimate = [];
+P_mag_estimate1 = [];
 predic_state = [];
+predic_state1 = [];
 predic_var = [];
+predic_var1 = [];
 for t = 1:length(Q_loc)
     % Predict next state of the quail with the last state and predicted motion.
     Q_estimate = A * Q_estimate + B * u;
     predic_state = [predic_state; Q_estimate(1)] ;
     %predict next covariance
     
+    % Method 1
     P = A * P * A' + Ex;
-    %P = A * P * A' + Ex - A*P*C'*inv(C*P*C'+Ez)*(A*P*C')';
     predic_var = [predic_var; P] ;
-    % predicted Ninja measurement covariance
-        
-    % Prima era così, secondo me sbagliato.
+    
+    % Kalman Gain
     K = P*C'*inv(C*P*C'+Ez);
     
     % Update the state estimate.
     Q_estimate = Q_estimate + K * (Q_loc_meas(t) - C * Q_estimate);
+    
     % update covariance estimation.
     P =  (eye(2)-K*C)*P;
+    
     %Store for plotting
     Q_loc_estimate = [Q_loc_estimate; Q_estimate(1)];
     vel_estimate = [vel_estimate; Q_estimate(2)];
     P_mag_estimate = [P_mag_estimate; P(1)]
+    
+    % Method 2
+    P1 = A * P1 * A' + Ex - A*P1*C'*inv(C*P1*C'+Ez)*(A*P1*C')';
+    predic_var1 = [predic_var1; P1] ;
+    
+    
+    % Kalman Gain
+    K1 = A*P1*C'*inv(C*P1*C'+Ez);
+            
+    % State optimal estimate
+    Q_estimate1 = (A-K1*C)*Q_estimate1 + K1 *Q_loc_meas(t) + B*u;
+    
+    %Store for plotting
+    Q_loc_estimate1 = [Q_loc_estimate1; Q_estimate1(1)];
+    vel_estimate1 = [vel_estimate1; Q_estimate1(2)];
+    P_mag_estimate1 = [P_mag_estimate1; P1(1)]
 end
 hold on
 % Plot the results
 figure(1);
 tt = 0 : dt : duration;
+
 plot(tt,Q_loc_estimate,'yo','LineWidth',2);
+hold on
+plot(tt,Q_loc_estimate1,'bo','LineWidth',2);
 %axis([0 10 -30 80])
 
 %% Do kalman filtering
@@ -113,10 +144,10 @@ predic_var = [];
 for t = 1:length(Q_loc)
     
     % Solution algebraic Riccati equation
-    P = A * P * A' + Ex;% - A*P*C'*inv(C*P*C'+Ez)*(A*P*C')';
+    P = A * P * A' + Ex - A*P*C'*inv(C*P*C'+Ez)*(A*P*C')';
     
     % Kalman Gain
-    K = P*C'*inv(C*P*C'+Ez);
+    K = A*P*C'*inv(C*P*C'+Ez);
     
     % State optimal estimate
     Q_estimate = (A-K*C)*Q_estimate + K *Q_loc_meas(t) + B*u;
@@ -138,7 +169,7 @@ hold on
 figure(1);
 tt = 0 : dt : duration;
 %plot(tt,Q_loc,'-r.',tt,Q_loc_meas,'-k.', tt,Q_loc_estimate,'-g.');
-plot(tt,Q_loc_estimate+1,'bo','LineWidth',2);
+plot(tt,Q_loc_estimate,'bo','LineWidth',2);
 
 % 
 % %plot the evolution of the distributions
