@@ -3,7 +3,7 @@ clear all
 %%  SISO system
 % Tf Realization 
 
-P = zpk([1.3 -2],[-1 -2 -8],1);
+P = zpk([1.3 -2],[-1 -2 -8 -2],1);
 sysM = canon(P,'modal');
 sysC = canon(P,'companion');
 %disp(sysC.a);
@@ -11,7 +11,8 @@ disp('Realization of the following Transfer Function:');
 disp(P);
 disp('X');
 pause();
-disp(sysM.a);
+disp(sysM.a)
+disp(sysC.a)
 
 % Jordan Form of A
 
@@ -94,7 +95,7 @@ Bj = Tm1\tenzoMin.b
 Cj = tenzoMin.c*Tm1
 
 Cif = [Cj(:,1) Cj(:,2) Cj(:,3) Cj(:,5) Cj(:,7)]
-%% Proprietà strutturali
+%% Proprietï¿½ strutturali
 
 disp('Controllabity:');
 rank(ctrb(tenzoMin.a,tenzoMin.b))
