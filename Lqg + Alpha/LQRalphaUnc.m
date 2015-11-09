@@ -147,6 +147,7 @@ tenzo_min_nominale=tenzo_min_unc.NominalValue
 disp('Let us see if Matlab confirms our guess');
 disp('  Press X ');
 
+
 [sysr,U] = minreal(tenzo_min_nominale,0.1);
 
 KalmanA = U*tenzo_min_nominale.a*U';
@@ -302,7 +303,7 @@ disp('che garantisce che la parte reale di eig(A-B*K)<-alfa ');
 disp(' ');
 disp(' ');
 disp('Premere un tasto per continuare...');
-pause;
+pause();
 
 %% Over the top
 clc;
