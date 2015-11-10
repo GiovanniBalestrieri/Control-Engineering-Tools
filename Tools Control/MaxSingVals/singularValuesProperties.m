@@ -2,10 +2,13 @@
 clc 
 clear all 
 
-disp('Let us define a square matrix E');
-E = [ 1 2 3; 4+i 5+i 6+i; 7 0 9]
-disp('Eigenvalues of E:');
-disp(eig(E))
+disp('Let us define a non square matrix E');
+E = [ 1 2 3; 4+i 5+i 6+i; 7 0 9 ; 11 12 13]
+
+if (size(E,1)  == size(E,2))
+    disp('Eigenvalues of E:');
+    disp(eig(E))
+end
 % Es = transposed conjugate of E
 Estar = conj(E).';
 
@@ -37,3 +40,9 @@ disp(sort(sqrt(eig(Estar*E)),'descend'))
 
 disp('Press X to continue');
 pause();
+
+%% Max Singular value of E
+clc
+
+disp('The largest singular value of E is: ')
+disp(svds(E,1));
