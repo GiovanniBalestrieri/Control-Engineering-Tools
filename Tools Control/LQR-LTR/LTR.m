@@ -94,7 +94,7 @@ legend('\sigma(U_0)^{-1}','lmtilde, order 1','lmtilde, order 2','Location','Nort
 h = findobj(gcf,'type','line');
 set(h,'linewidth',2);
 uuu = gca;
-set(uuu,'FontSize',20)
+set(uuu,'FontSize',14)
 
 %%
 close all;
@@ -109,7 +109,7 @@ lm_til = lm2;
 h = findobj(gcf,'type','line');
 set(h,'linewidth',2);
 uuu = gca;
-set(uuu,'FontSize',20)
+set(uuu,'FontSize',14)
 
 %%
 close all;
