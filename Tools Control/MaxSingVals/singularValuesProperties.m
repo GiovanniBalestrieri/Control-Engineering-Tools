@@ -46,3 +46,8 @@ clc
 
 disp('The largest singular value of E is: ')
 disp(svds(E,1));
+lambda = sqrt(eig(Estar*E));
+disp('max(sqrt(eig(Estar*E)))')
+disp(max(lambda))
+
+
