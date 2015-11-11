@@ -119,21 +119,32 @@ R=eye(size(sysM.b,2));
 K=lqr(sysM.a,sysM.b,Q,R);
 
 H = ss(sysM.a,sysM.b,K,zeros(size(sysM.d)));
-disp('Eig of A');
-eig(H.a)
 
 figure(7)
 step(H)
 title('Open Loop - post sintesi');
 
-% Determine numero giri da nyquist. Must be = to Pp = 2
+% Determine numero giri da nyquist. Must be = to Pp 
 IPGH = 1 + H;
 nyquist(IPGH);
+
+% compute closed loop 
+cLoop = feedback(IPGH,1);
+
+disp('Eig of AL');
+eig(H.a)
+disp('There are two eigenvalues with non negative Re(z)!!');
+
+disp('Eig of ASigma');
+eig(cLoop.a)
+
+disp('How many encirclements the Nyquist plot makes around the point (-1,0)?');
+disp('If two is the answer the Closed loop sys will be AS');
 
 disp('Press X to continue');
 pause();
 
-cLoop = feedback(IPGH,1);
+% Display Closed Loop step response
 figure(8)
 step(cLoop);
 title('Closed Loop post sintesi');
