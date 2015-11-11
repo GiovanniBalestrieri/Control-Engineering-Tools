@@ -85,8 +85,10 @@ step(cLoop);
 title('Closed Loop post sintesi');
 
 %% Pole
+% se molt(0) = dispari  ->   Rami all'INF Opposizione di fase
+% se molt(0) = pari     ->   Rami all'INF in fase
 
-P = zpk([1.3 -2],[-1 0  0 0 5 -2],1);
+P = zpk([1.3 -2],[-1 0 0 -2],1);
 sysM = canon(P,'modal');
 %disp(sysC.a);
 disp('Realization of the following Transfer Function:');
@@ -149,3 +151,6 @@ figure(8)
 step(cLoop);
 title('Closed Loop post sintesi');
 
+% Now try with
+% 
+P = zpk([1.3 -2],[-1 0 0 0 -2],1);
