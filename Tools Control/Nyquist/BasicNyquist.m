@@ -2,33 +2,35 @@
 
 H = zpk([2 2 -3],[-2 -2 -2 -1],1)
 IPGH = 1 + H;
+figure(1)
 nyquist(IPGH);
+
+figure(2)
+step(H)
+title('Open Loop');
 
 
 cLoop = feedback(IPGH,1)
-figure(1)
-title('Closed Loop');
+figure(3)
 step(cLoop)
+title('Closed Loop');
 
-figure(2)
-title('Open Loop');
-step(H)
+%% Nyquist Stable OL plant con coincidenza
 
-%% Nyquist UNStable OL plant
-
-H = zpk([2 2 -3],[2 2 -3 -1],1
+H = zpk([2 2 -3],[2 2 -3 -1],1);
 IPGH = 1 + H;
+figure(4)
 nyquist(IPGH);
 
-
-cLoop = feedback(IPGH,1)
-figure(1)
-title('Closed Loop');
-step(cLoop)
-
-figure(2)
-title('Open Loop');
+figure(6)
 step(H)
+title('Open Loop');
+
+cLoop = feedback(IPGH,1);
+figure(5)
+step(cLoop)
+title('Closed Loop');
+
 
 %% Nyquist UNStable plant
 
@@ -90,10 +92,10 @@ nyquist(IPGH);
 
 cLoop = feedback(IPGH,1)
 figure(1)
-title('Closed Loop');
 step(cLoop)
+title('Closed Loop');
 
 figure(2)
-title('Open Loop');
 step(H)
+title('Open Loop');
 
