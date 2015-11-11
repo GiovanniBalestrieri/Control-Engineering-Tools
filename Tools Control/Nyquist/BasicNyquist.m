@@ -9,7 +9,6 @@ figure(2)
 step(H)
 title('Open Loop');
 
-
 cLoop = feedback(IPGH,1)
 figure(3)
 step(cLoop)
@@ -80,13 +79,14 @@ IPGH = 1 + H;
 nyquist(IPGH);
 
 
-cLoop = feedback(IPGH,1);
+cLoop = feedback(H,1);
 figure(8)
 step(cLoop);
 title('Closed Loop post sintesi');
 
-%% 
-P = zpk([1.3 -2],[-1 0 5 -2],1);
+%% Pole
+
+P = zpk([1.3 -2],[-1 0  0 0 5 -2],1);
 sysM = canon(P,'modal');
 %disp(sysC.a);
 disp('Realization of the following Transfer Function:');
