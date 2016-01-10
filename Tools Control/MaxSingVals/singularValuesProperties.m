@@ -3,7 +3,7 @@ clc
 clear all 
 
 disp('Let us define a non square matrix E');
-E = [ 1 2 3; 4+i 5+i 6+i; 7 0 9 ; 11 12 13]
+E = [ 1 2 3; 4+i 5+i 6+i; 7 0 9]
 
 if (size(E,1)  == size(E,2))
     disp('Eigenvalues of E:');
@@ -50,4 +50,8 @@ lambda = sqrt(eig(Estar*E));
 disp('max(sqrt(eig(Estar*E)))')
 disp(max(lambda))
 
+%% It Exists v: v*.Delta.v = Sum (vi*.lambdai.vi) <= vi*.vi*(max_svd(E)
 
+[U,S,V] = svd(E);
+% Delta = S diag(eig)
+disp(S)
