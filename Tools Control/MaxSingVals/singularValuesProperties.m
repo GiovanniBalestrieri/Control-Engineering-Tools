@@ -52,6 +52,18 @@ disp(max(lambda))
 
 %% It Exists v: v*.Delta.v = Sum (vi*.lambdai.vi) <= vi*.vi*(max_svd(E)
 
-[U,S,V] = svd(E);
+[U,S,V] = svd(Estar*E);
+lambdaaa = eig(Estar*E);
+lambdai = sort(lambdaaa,'descend')
 % Delta = S diag(eig)
 disp(S)
+disp('Let us create the vector v such as:');
+v = [1;0.4;0.1]
+vStar = conj(v).'
+
+disp('v*.S.v = SUM (vi*.S.v)');
+disp(vStar*S*v)
+disp('=');
+disp(vStar(1)*lambdai(1)*v(1)+vStar(2)*lambdai(2)*v(2)+vStar(3)*lambdai(3)*v(3))
+disp('and the last result should be smaller than v*v*max_svd(E)^2');
+vStar*v*svds(E,1)^2
