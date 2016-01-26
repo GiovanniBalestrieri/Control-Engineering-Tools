@@ -1,3 +1,5 @@
+% Limitations : It fsolve gives only one root. F must be continous
+
 func = @fun;
 x0 = [0,0];
 
