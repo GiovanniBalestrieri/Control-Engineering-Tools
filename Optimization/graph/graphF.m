@@ -4,9 +4,9 @@ function graphF
 figure1 = figure('Position',[1 400 1200 600]);
 colormap('gray');
 axis square;
-[X,Y] = meshgrid(-10000:1:10000);
+[X,Y] = meshgrid(-100:1:100);
 %Z=ex2(X,Y);
-Z=X.^2 + 2*X*Y + 1/2*Y.^2 - 2*X;
+Z=1/3*(X-2).^3 -X*Y.^2;
 
 
 % Create subplot
