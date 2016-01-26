@@ -4,12 +4,12 @@ function graphF
 figure1 = figure('Position',[1 400 1200 600]);
 colormap('gray');
 axis square;
-[X,Y] = meshgrid(-1:0.1:1);
+[X,Y] = meshgrid(-10:0.1:10);
 %Z=ex2(X,Y);
 %Z=X.^3+Y.^2+3*X;
 %Z = abs(X.^3);
-
-Z=Y.^4 + X.^4 - 3*X*Y;
+%Z=Y.^4 + X.^4 - 3*X*Y;
+Z = 2*X.^3 - 3*X.^2 -6*X.*Y.*(X-Y-1);
 
 % Create subplot
 subplot1 = subplot(1,2,1,'Parent',figure1);
