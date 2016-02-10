@@ -10,7 +10,7 @@ sys = ss(A,B,C,D);
 %Calcolo retroazione dallo stato
 disp('Uso la funzione lqr per calcolare il guadagno K (la retroazione dallo stato u=Kx)')
 Q=2;
-R= 2;
+R=2;
 K = lqr(sys.a,sys.b,Q,R);
 disp('Matrice di guadagno K: [comando K = lqr(A,B,Q,R)]');
 disp(K);
