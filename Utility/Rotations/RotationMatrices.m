@@ -20,3 +20,13 @@ Rz(psi)
 Rtot = RotationMatrix(phi,theta,psi)
 stateB = [ 0; 0;1];
 stateI = Rtot*state
+% The resulting thrust vector in the inertial frame will be oriented along the negative y axis
+
+%% Now let us try a different angle:
+
+phi = pi/4;
+theta = pi/9;
+psi = 0;
+Rtot = RotationMatrix(phi,theta,psi)
+stateB = [ 0; 0;1];
+stateI = Rtot*state
