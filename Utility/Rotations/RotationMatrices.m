@@ -149,14 +149,45 @@ phi = a;
 theta = b;
 psi = c;
 
-Rz(psi)*Ry(theta)*Rx(phi)
+%Rz(psi)*Ry(theta)*Rx(phi)
+syms Fthrust
+Xbody = [ 0; 0; Fthrust]
 
-stateB = [ 0; 0;1];
-
-% rotation matrix from body to inertial
+disp('rotation matrix from Body to Inertial')
 Rb2i = RotationMatrix(phi,theta,psi)
-stateI = Rb2i*state
+XInertial = Rb2i*Xbody
 
-% rotation matrix from inertial to body
+disp('rotation matrix from Inertial to Body')
 Ri2b = Rb2i.'
 
+%% Application to Tenzo
+
+disp('Thrust force: u along the negative z axis')
+syms u
+Fbody = [ 0 ; 0 ; -1 ]
+
+
+phi = pi/6;
+theta = pi/18;
+psi = 0;
+
+Rb2i = RotationMatrix(phi,theta,psi)
+XInertial = Rb2i*Fbody
+
+clf(figure(1))
+% 3D plot to make it simple
+P0 = [ 0; 0 ; 0];
+figure(1)
+grid on
+plot3(1,0,0,'r*')
+hold on;
+plot3(0,1,0,'g*') 
+hold on;
+plot3(0,0,1,'b*') 
+hold on;
+quiver3(P0(1),P0(2),P0(3), Fbody(1),Fbody(2),Fbody(3))
+axis equal
+hold on
+quiver3(P0(1),P0(2),P0(3), XInertial(1),XInertial(2),XInertial(3))
+grid on
+legend('x','y','z','x0','xf')
