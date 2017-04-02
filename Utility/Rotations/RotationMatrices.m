@@ -37,14 +37,7 @@ stateI = Rtot*state
 Rtotm1 = Rtot'
 % The resulting thrust vector in the inertial frame will be oriented along the negative y axis
 
-%% Now let us try a different angle:
 
-phi = pi/4;
-theta = pi/9;
-psi = 0;
-Rtot = RotationMatrix(phi,theta,psi)
-stateB = [ 0; 0;1];
-stateI = Rtot*state
 
 
 %% Other test rotate pi/2 around x, y and then z
@@ -147,6 +140,7 @@ grid on
 legend('x','y','z','x0','xf')
 
 disp('We are expressing the rotated vector with respect to the inertial frame')
+disp('Xinertial = RxRyRz xbody')
 
 %% Finally let us try to explicitate this transformation
 
@@ -158,10 +152,10 @@ psi = c;
 Rz(psi)*Ry(theta)*Rx(phi)
 
 stateB = [ 0; 0;1];
-stateI = Rtot*state
 
 % rotation matrix from body to inertial
 Rb2i = RotationMatrix(phi,theta,psi)
+stateI = Rb2i*state
 
 % rotation matrix from inertial to body
 Ri2b = Rb2i.'
