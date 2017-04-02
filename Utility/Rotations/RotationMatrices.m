@@ -49,35 +49,104 @@ stateI = Rtot*state
 
 %% Other test rotate pi/2 around x, y and then z
 % Let us start from x0 along the z axis
+clf(figure(1))
+x0 = [ 1; 1;0]
 
-state0 = [ 0; 0;1];
+disp('another example with pi/2 -> 0 -> pi/2');
+phi = pi/2;
+theta = 0;
+psi = pi/2;
+
+% rotation matrix from body to inertial
+Rb2i = RotationMatrix(phi,theta,psi);
+xf = Rb2i*x0
+
+% 3D plot to make it simple
+P0 = [ 0; 0 ; 0];
+figure(1)
+plot3(1,0,0,'r*')
+hold on;
+plot3(0,1,0,'g*') 
+hold on;
+plot3(0,0,1,'b*') 
+hold on;
+quiver3(P0(1),P0(2),P0(3), x0(1),x0(2),x0(3))
+axis equal
+hold on
+quiver3(P0(1),P0(2),P0(3), xf(1),xf(2),xf(3))
+grid on
+legend('x','y','z','x0','xf')
+
+pause()
+clf(figure(1))
+% Another example
+disp('another example with pi/2 -> pi/2 -> 0');
+
+clf(figure(1))
+x0 = [ 1; 1;0]
+
+phi = pi/2;
+theta = pi/2;
+psi = 0;
+
+% rotation matrix from body to inertial
+Rb2i = RotationMatrix(phi,theta,psi);
+xf = Rb2i*x0
+
+% 3D plot to make it simple
+P0 = [ 0; 0 ; 0];
+figure(1)
+grid on
+plot3(1,0,0,'r*')
+hold on;
+plot3(0,1,0,'g*') 
+hold on;
+plot3(0,0,1,'b*') 
+hold on;
+quiver3(P0(1),P0(2),P0(3), x0(1),x0(2),x0(3))
+axis equal
+hold on
+quiver3(P0(1),P0(2),P0(3), xf(1),xf(2),xf(3))
+grid on
+legend('x','y','z','x0','xf')
+
+
+pause()
+clf(figure(1))
+% Last example
+disp('Last example with pi/2 -> pi/2 -> pi/2');
+
+x0 = [ 1; 1;0]
 
 phi = pi/2;
 theta = pi/2;
 psi = pi/2;
 
-x1 = Rx(phi)*state0
-x2 = Ry(theta)*x1
-xf = Rz(psi)*x2
-Rz(psi)*Ry(theta)*Rx(phi)
 
 % rotation matrix from body to inertial
-Rb2i = RotationMatrix(phi,theta,psi)
-statef = Rb2i*state0
+Rb2i = RotationMatrix(phi,theta,psi);
+xf = Rb2i*x0
+
+
 
 % 3D plot to make it simple
-P0 = [ 0; 0 ; 0]
-quiver3(P0(1),P0(2),P0(3), state0(1),state0(2),state0(3))
-hold on
-quiver3(P0(1),P0(2),P0(3), x1(1),x1(2),x1(3))
-hold on
-quiver3(P0(1),P0(2),P0(3), x2(1),x2(2),x2(3))
-hold on
-quiver3(P0(1),P0(2),P0(3), statef(1),statef(2),statef(3))
+P0 = [ 0; 0 ; 0];
+figure(1)
+grid on
+plot3(1,0,0,'r*')
+hold on;
+plot3(0,1,0,'g*') 
+hold on;
+plot3(0,0,1,'b*') 
+hold on;
+quiver3(P0(1),P0(2),P0(3), x0(1),x0(2),x0(3))
 axis equal
-legend('x0','x1','x2','xfinal')
+hold on
+quiver3(P0(1),P0(2),P0(3), xf(1),xf(2),xf(3))
+grid on
+legend('x','y','z','x0','xf')
 
-
+disp('We are expressing the rotated vector with respect to the inertial frame')
 
 %% Finally let us try to explicitate this transformation
 

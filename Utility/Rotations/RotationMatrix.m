@@ -1,6 +1,5 @@
 function [ R ] = RotationMatrix( alpha,beta,gamma )
-%RX Summary of this function goes here
-%   Detailed explanation goes here
+%       X Y Z    
 
 R =  Rx(alpha)*Ry(beta)*Rz(gamma);
 
