@@ -27,7 +27,7 @@ psi = 0;
 Rx(phi)
 Ry(theta)
 Rz(psi)
-Rtot = RotationMatrix(phi,theta,psi)
+Rtot = RotationMatrixXYZ(phi,theta,psi)
 stateB = [ 0; 0;1];
 stateI = Rtot*state
 
@@ -51,7 +51,7 @@ theta = 0;
 psi = pi/2;
 
 % rotation matrix from body to inertial
-Rb2i = RotationMatrix(phi,theta,psi);
+Rb2i = RotationMatrixXYZ(phi,theta,psi);
 xf = Rb2i*x0
 
 % 3D plot to make it simple
@@ -83,7 +83,7 @@ theta = pi/2;
 psi = 0;
 
 % rotation matrix from body to inertial
-Rb2i = RotationMatrix(phi,theta,psi);
+Rb2i = RotationMatrixXYZ(phi,theta,psi);
 xf = Rb2i*x0
 
 % 3D plot to make it simple
@@ -117,7 +117,7 @@ psi = pi/2;
 
 
 % rotation matrix from body to inertial
-Rb2i = RotationMatrix(phi,theta,psi);
+Rb2i = RotationMatrixXYZ(phi,theta,psi);
 xf = Rb2i*x0
 
 
@@ -154,11 +154,25 @@ syms Fthrust
 Xbody = [ 0; 0; Fthrust]
 
 disp('rotation matrix from Body to Inertial')
-Rb2i = RotationMatrix(phi,theta,psi)
+Rb2i = RotationMatrixZYX(phi,theta,psi)
 XInertial = Rb2i*Xbody
 
 disp('rotation matrix from Inertial to Body')
 Ri2b = Rb2i.'
+
+%% components of the gravitational force in the body frame
+syms m g a b c
+
+phi = a;
+theta = b;
+psi = c;
+
+XInertial = [ 0; 0; m*g]
+
+Ri2b = Rb2i.'
+Gbody = Ri2b*XInertial
+
+
 
 %% Application to Tenzo
 
@@ -171,7 +185,7 @@ phi = pi/6;
 theta = pi/18;
 psi = 0;
 
-Rb2i = RotationMatrix(phi,theta,psi)
+Rb2i = RotationMatrixXYZ(phi,theta,psi)
 XInertial = Rb2i*Fbody
 
 clf(figure(1))
