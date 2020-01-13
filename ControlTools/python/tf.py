@@ -4,7 +4,7 @@ import control
 import matplotlib.pyplot as plt
 from control.matlab import *    # MATLAB-like functions
 from numpy.linalg import matrix_rank
-
+import numpy as np
 import scipy as sp
 
 
@@ -62,11 +62,6 @@ structural_properties_check(series1)
 
 
 w001rad = 1.    # 1 rad/s
-w010rad = 10.   # 10 rad/s
-w100rad = 100.  # 100 rad/s
-w001hz = 2*sp.pi*1.    # 1 Hz
-w010hz = 2*sp.pi*10.   # 10 Hz
-w100hz = 2*sp.pi*100.  # 100 Hz
 # First order systems
 pt1_w001rad = tf([1.], [1./w001rad, 1.])
 ss1 = tf2ss(pt1_w001rad)
@@ -74,16 +69,29 @@ print(pt1_w001rad)
 
 
 
-sisotool(ss1)
+#sisotool(ss1)
 
 m = margin(ss1)
 print(m)
 
-fig = plt.figure()
-T,Y = step(ss1)
-plt.plot(T, Y)
-plt.show()
+#fig = plt.figure()
+#T,Y = step(ss1)
+#plt.plot(T, Y)
+#plt.show()
 
 
 K = place(ss1.A, ss1.B, [ -5])
 print(K)
+
+# Creating cl sys
+ss1_cl = ss(ss1.A - ss1.B*K, ss1.B*K, ss1.C, 0)
+sisotool(ss1_cl)
+
+
+
+plt.figure(9)
+Yvec, Tvec = step(ss1_cl, np.linspace(0, 20))
+plt.plot(Tvec.T, Yvec.T)
+plt.show()
+poles = pole(ss1_cl)
+print(poles)
