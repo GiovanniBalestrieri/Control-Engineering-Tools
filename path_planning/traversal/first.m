@@ -1,26 +1,33 @@
+clear
+clc
+
+plotting = false
+
+
+
 load maps
-map1
-map2
-map3
+#map2
+#map3
 
 disp("Analyzing  Map1")
 disp("Number of cells")
 disp(rows(map1)*columns(map1))
+NodeZ = struct();
+NodeZ.id = 0;
+previous = NodeZ;
 
-Graph1 = struct()
-Graph1.obstacles = 0
-id = 0
-for i=1:rows(map1)
-  for j=1:columns(map1)
-    # Create a node structure for each empty cell
-    if map1(i,j) != 1
-      id++
-      Node = struct("id",id,"coordX",i,"coordY",j,"visited",0)
-      Graph1 
-    else
-      Graph1.obstacles++
-    endif
-  endfor
-endfor
+  
 
+map = [ 0, 1, 1;2, 1 ,1 ;0 , 1, 0]
+
+g = populate_graph_from_ogrid(map);
+
+disp("Numer of obstacles: ")
+disp(g.obstacles)
+
+if plotting
+  pcolor(map)
+endif
+
+disp(g.id_table)
 # Check for Forests -> Retrieve impossible
