@@ -16,8 +16,8 @@ backtracking = 0;
 backtracking_step = 0;
 
 load maps
-map = [ 0, 2, 0 ,1;
-        0, 0, 0 ,0];
+map = [ 0, 0, 0 ,1;
+        0, 2, 0 ,0];
 #map = [ 2, 0 ,0 ,0;
          #0, 0 ,0 ,1];
          #0, 1, 0 ,0 ,0];
@@ -170,7 +170,7 @@ while something_to_search(cells_to_visit)
             backtracking_step
             backtracking = 1;
             
-            disp(path{end-backtracking_step})
+            disp(g.nodes{path{end-backtracking_step}.id})
             node_cur = g.nodes{path{end-backtracking_step}.id};
             path{steps} = node_cur;
             
