@@ -8,7 +8,7 @@ function Graph1 = populate_graph_from_ogrid(map)
 
   # First loops through all cells and fill the table ids
   number_err = 0;
-  id = 1
+  id = 1;
   
   disp("Analyzing Nodes ")
   
@@ -100,4 +100,5 @@ function Graph1 = populate_graph_from_ogrid(map)
   Graph1.num_err = number_err;
   Graph1.id_table = id_table;
   
+  disp("Graph created")
 endfunction
