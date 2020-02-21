@@ -1,4 +1,4 @@
-clear
+clear all
 clc
 ###################################################
 # Utility variables
@@ -9,29 +9,28 @@ verbosity = 1
 ###################################################
 # Path Planning
 ###################################################
+cost_fcn = 0;
+k1 = 1;
+k2 = 0;
+backtracking = 0;
+backtracking_step = 0;
 
 load maps
-map = [ 2, 0,0 ,0;
-        0, 0, 0 ,1];
+map = [ 0, 2, 0 ,1;
+        0, 0, 0 ,0];
 #map = [ 2, 0 ,0 ,0;
          #0, 0 ,0 ,1];
          #0, 1, 0 ,0 ,0];
-map = map
-
+         
 disp("Analyzing  Map")
 disp("Number of cells")
 disp(rows(map)*columns(map))
-
-NodeZ = struct();
-NodeZ.id = 0;
-previous = NodeZ;
 
 # Create graph from grid
 global g = {}
 g = populate_graph_from_ogrid(map);
 
-## Path Planning
-cost_fcn = 0;
+
 cells_to_visit = {};
 path = {}; # stores the result
 for i=1:size(g.nodes,2)
@@ -69,11 +68,13 @@ disp(g.id_table)
 #for node = 1:size(g.nodes
 while something_to_search(cells_to_visit)
 
-  disp("Path so far")
-  for i=1:size(path,2)
-    disp(path{i}.id)
-  endfor 
-  
+
+  if verbosity == 1
+    disp("Path so far")
+    for i=1:size(path,2)
+      disp(path{i}.id)
+    endfor 
+  endif
   
   if steps == 8
     #break
@@ -104,12 +105,15 @@ while something_to_search(cells_to_visit)
   endfor
   #}
     
+  if verbosity == 1
     disp("              Nieghbor")
     for x=1:size(g.adjacencies{node_cur.id},2)
       disp(g.nodes{g.adjacencies{node_cur.id}{x}.id}.id)
     endfor
-    disp("")
-    cond = 1
+    disp("")  
+  endif
+  
+    cond = 1;
       for x=1:size(g.adjacencies{node_cur.id},2)
         if ~cond
           break
@@ -128,8 +132,10 @@ while something_to_search(cells_to_visit)
             node_cur = g.nodes{g.adjacencies{node_cur.id}{x}.id};
             path{steps} = node_cur;
             
-            disp("\t\t\tFound unvisited node with id")
-            disp(node_cur.id)
+            if verbosity == 1
+              disp("\t\t\tFound unvisited node with id")
+              disp(node_cur.id)
+            endif
             
             # drop node from to_visit list
             index = vindex(cells_to_visit,node_cur);
@@ -139,19 +145,41 @@ while something_to_search(cells_to_visit)
             #disp("Flagging node as visited")
             g.nodes{node_cur.id}.visited = 1;
             
-            cond = 0
+            cond = 0;
+            backtracking_step = 0;
+            backtracking = 0;
         else
-          disp("\t\t\tAlready visited node with this id")
-          disp("\t\t\tChecking if last")
-          # Check if last adj node
-          if x == size(g.adjacencies{node_cur.id},2)
-            disp("\t\t\tGot to the end of adj list. Backtracking!")
-            path{steps} = path{end-1};
-            node_cur = g.nodes{path{end}.id};
-            disp("\t\t\tSetting node")
-            disp(g.nodes{node_cur.id}.id)
+          
+          if verbosity == 1
+            disp("\t\t\tAlready visited node with this id")
+            disp("\t\t\tChecking if last")
+          endif
+          
+          # Need to backtrack?
+          if x == size(g.adjacencies{node_cur.id},2) && g.nodes{node_cur.id}.visited == 1
+          
+            if verbosity == 1
+              disp("\t\t\tGot to the end of adj list. Backtracking!")
+            endif
+            
+            if backtracking_step == 1
+              backtracking_step += 2;
+            else
+              backtracking_step++;
+            endif
+            backtracking_step
+            backtracking = 1;
+            
+            disp(path{end-backtracking_step})
+            node_cur = g.nodes{path{end-backtracking_step}.id};
+            path{steps} = node_cur;
+            
           else
-            disp("\t\t\tContinue")
+          
+            if verbosity == 1
+              disp("\t\t\tContinue")
+            endif
+            
           endif
         endif
         
@@ -159,14 +187,14 @@ while something_to_search(cells_to_visit)
       endfor
       # Should apply backtracking go back to previous path
       
-  disp("STOP ITERATION")
+  #disp("STOP ITERATION")
 endwhile
 
 
 disp("Numer of obstacles: ")
 disp(g.obstacles)
-disp(path)
-disp(g.id_table)
+#disp(path)
+
 
 if plotting
   aug_map = zeros(rows(map)+2,columns(map)+2)
@@ -189,4 +217,11 @@ disp("Path")
 for i=1:size(path,2)
   disp(path{i}.id)
 endfor 
-# Check for Forests -> Retrieve impossible
+
+
+disp("Cost function") 
+cost_fcn = k1*size(path,2) #+ k2*phase 
+disp(cost_fcn)
+disp(g.id_table)
+
+# Future Work 1: Check for Forests before starting
