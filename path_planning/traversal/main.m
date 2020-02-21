@@ -18,8 +18,8 @@ backtracking_step = 0;
 load maps
 
 
-map = [ 1, 1, 1 ,1, 0;
-        0, 1, 0 ,1, 0;
+map = [ 0, 1, 0 ,1, 0;
+        0, 0, 0 ,1, 0;
         0, 1, 0 ,1, 0;
         0, 0, 0 ,0, 2];
 #{
@@ -34,7 +34,7 @@ map = [ 0, 0 ,0 ,0;
          0, 0 ,0 ,1;
          0, 1, 0 ,0];
 #}         
-#map = map3 
+map = map3
 disp("Analyzing  Map")
 disp("Number of cells")
 disp(rows(map)*columns(map))
@@ -174,8 +174,12 @@ while something_to_search(cells_to_visit)
             if verbosity == 1
               disp("\t\t\tGot to the end of adj list. Backtracking!")
             endif
+            if backtracking_step == 0
+              backtracking_step++;
+            else
+              backtracking_step += 2;
+            endif
             
-            backtracking_step += 2;
             backtracking_step
             backtracking = 1;
             
