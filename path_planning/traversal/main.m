@@ -4,16 +4,19 @@ clc
 # Utility variables
 ###################################################
 plotting = false
-verbosity = 0
+verbosity = 1
 
 ###################################################
 # Path Planning
 ###################################################
 
 load maps
-map = [ 0, 2; 0, 0];
-
-
+map = [ 2, 0;
+        0, 0];
+#map = [ 2, 0 ,0 ,0;
+         #0, 0 ,0 ,1];
+         #0, 1, 0 ,0 ,0];
+map = map
 
 disp("Analyzing  Map")
 disp("Number of cells")
@@ -61,24 +64,31 @@ function val = something_to_search(list)
   endfor
 endfunction
 
+disp(g.id_table)
+
 #for node = 1:size(g.nodes
 while something_to_search(cells_to_visit)
 
+disp("Path so far")
+for i=1:size(path,2)
+  disp(path{i}.id)
+endfor 
   steps++;
   
   if verbosity == 1
     disp("Iteration: ")
     disp(steps)
     disp("Current node:")
-    disp(g.nodes(node_cur.id))
+    disp(g.nodes{node_cur.id}.id)
     disp("Cells to Visit:")
     for i=1:size(cells_to_visit,2)
       if ~isempty(cells_to_visit{i})
         disp(cells_to_visit{i}.id)
       endif
     endfor 
+  endif
     
-    disp("Crawllng Unvisited Nodes nieghbors")
+  disp(" Unvisited Nodes so far")
     
     for i=1:size(g.nodes,2)
       if g.nodes{i}.visited == 0
@@ -86,21 +96,20 @@ while something_to_search(cells_to_visit)
       endif
     endfor
     
-    disp("           Nieghbor")
+    disp("              Nieghbor")
     for x=1:size(g.adjacencies{node_cur.id},2)
-      disp(g.nodes{g.adjacencies{node_cur.id}{x}.id})
+      disp(g.nodes{g.adjacencies{node_cur.id}{x}.id}.id)
     endfor
     disp("")
-  endif
   
       for x=1:size(g.adjacencies{node_cur.id},2)
       
-        if verbosity == 1
+        #if verbosity == 1
           disp("        Neighbor loop iter:  ")
           disp(x)
           disp("        Now Checking Node : ")
           disp(g.nodes{g.adjacencies{node_cur.id}{x}.id})
-        endif
+        #endif
         
         if g.nodes{g.adjacencies{node_cur.id}{x}.id}.visited == 0 # not visited yet
            cond = false;
@@ -109,8 +118,8 @@ while something_to_search(cells_to_visit)
             node_cur = g.nodes{g.adjacencies{node_cur.id}{x}.id};
             path{steps} = node_cur;
             
-            #disp("Found unvisited node with id")
-            #disp(node_cur.id)
+            disp("Found unvisited node with id")
+            disp(node_cur.id)
             
             # drop node from to_visit list
             index = vindex(cells_to_visit,node_cur);
@@ -120,7 +129,7 @@ while something_to_search(cells_to_visit)
             #disp("Flagging node as visited")
             g.nodes{node_cur.id}.visited = 1;
             break
-            #crawl(g,node_cur, cells_to_visit, steps);
+            #crawl1(g,node_cur, cells_to_visit, steps);
         else
           disp("\t\t\tAlready visited node with id")
           disp(g.adjacencies{node_cur.id}{x}.id)
@@ -128,14 +137,14 @@ while something_to_search(cells_to_visit)
         
       endfor
       
-  disp("STOP ITERATION")
+  #disp("STOP ITERATION")
 endwhile
 
 
 disp("Numer of obstacles: ")
 disp(g.obstacles)
-disp(g.id_table)
 disp(path)
+disp(g.id_table)
 
 if plotting
   aug_map = zeros(rows(map)+2,columns(map)+2)
@@ -147,4 +156,15 @@ if plotting
   pcolor(aug_map)
 endif
 
+disp("Remaining Cells to Visit:")
+for i=1:size(cells_to_visit,2)
+  if ~isempty(cells_to_visit{i})
+    disp(cells_to_visit{i}.id)
+  endif
+endfor 
+
+disp("Path")
+for i=1:size(path,2)
+  disp(path{i}.id)
+endfor 
 # Check for Forests -> Retrieve impossible
