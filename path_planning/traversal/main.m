@@ -11,8 +11,8 @@ verbosity = 1
 ###################################################
 
 load maps
-map = [ 2, 0;
-        0, 0];
+map = [ 2, 0,0 ,0;
+        0, 0, 0 ,1];
 #map = [ 2, 0 ,0 ,0;
          #0, 0 ,0 ,1];
          #0, 1, 0 ,0 ,0];
@@ -136,6 +136,10 @@ endfor
         endif
         
       endfor
+      # Should apply backtracking go back to previous path
+      steps++;
+      path{steps} = path{end-1}
+      node_cur = path{end-1}
       
   #disp("STOP ITERATION")
 endwhile
