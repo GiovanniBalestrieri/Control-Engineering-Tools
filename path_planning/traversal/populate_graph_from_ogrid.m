@@ -1,17 +1,15 @@
 
 function Graph1 = populate_graph_from_ogrid(map)
-  id_table = zeros(rows(map),columns(map));
   Graph1 = struct();
   Graph1.obstacles = 0;
   Graph1.nodes = {};
   Graph1.adjacencies = {};
-
-  # First loops through all cells and fill the table ids
+  
+  id_table = zeros(rows(map),columns(map));
   number_err = 0;
   id = 1;
   
-  disp("Analyzing Nodes ")
-  
+  # Analyzing Nodes
   for i=1:rows(map)
     for j=1:columns(map)
       # Create a node structure for each empty cell
@@ -24,15 +22,14 @@ function Graph1 = populate_graph_from_ogrid(map)
         if map(i,j) == 2
           Graph1.start = NodeX;
         endif
-        id++;
-        
+        id++;        
       else
         Graph1.obstacles++;
       endif
     endfor
   endfor
   
-  disp("Analyzing Connections ")
+  # Analyzing Connections
   
   for i=1:rows(map)
     for j=1:columns(map)
@@ -55,7 +52,6 @@ function Graph1 = populate_graph_from_ogrid(map)
           endif
         catch
           number_err++;
-          disp("Err i -1")
         end_try_catch
         
         try
@@ -67,7 +63,6 @@ function Graph1 = populate_graph_from_ogrid(map)
           endif
         catch
           number_err++;
-          disp("Err i + 1")
         end_try_catch
         
         try
@@ -79,7 +74,6 @@ function Graph1 = populate_graph_from_ogrid(map)
           endif
         catch
           number_err++;
-          disp("Err J -1")
         end_try_catch
         
         try
@@ -91,7 +85,6 @@ function Graph1 = populate_graph_from_ogrid(map)
           endif
         catch
           number_err++;
-          disp("Err J -1")
         end_try_catch
       endif      
     endfor
