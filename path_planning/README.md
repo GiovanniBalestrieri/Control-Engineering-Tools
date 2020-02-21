@@ -1,4 +1,4 @@
-# Path planning - Discovery
+# Path planning Discovery
 
 Collection of graph traversal approaches. Aim: Visiting each vertex in a graph. 
 
