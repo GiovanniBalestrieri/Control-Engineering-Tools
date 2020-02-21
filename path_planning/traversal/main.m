@@ -69,11 +69,15 @@ disp(g.id_table)
 #for node = 1:size(g.nodes
 while something_to_search(cells_to_visit)
 
-disp("Path so far")
-for i=1:size(path,2)
-  disp(path{i}.id)
-endfor 
-  steps++;
+  disp("Path so far")
+  for i=1:size(path,2)
+    disp(path{i}.id)
+  endfor 
+  
+  
+  if steps == 8
+    #break
+  endif
   
   if verbosity == 1
     disp("Iteration: ")
@@ -87,38 +91,44 @@ endfor
       endif
     endfor 
   endif
+  
+  steps++;
     
+    
+  #{
   disp(" Unvisited Nodes so far")
-    
-    for i=1:size(g.nodes,2)
-      if g.nodes{i}.visited == 0
-        disp(g.nodes{i}.id)
-      endif
-    endfor
+  for i=1:size(g.nodes,2)
+    if g.nodes{i}.visited == 0
+      disp(g.nodes{i}.id)
+    endif
+  endfor
+  #}
     
     disp("              Nieghbor")
     for x=1:size(g.adjacencies{node_cur.id},2)
       disp(g.nodes{g.adjacencies{node_cur.id}{x}.id}.id)
     endfor
     disp("")
-  
+    cond = 1
       for x=1:size(g.adjacencies{node_cur.id},2)
+        if ~cond
+          break
+        endif
       
-        #if verbosity == 1
+        if verbosity == 1
           disp("        Neighbor loop iter:  ")
           disp(x)
           disp("        Now Checking Node : ")
-          disp(g.nodes{g.adjacencies{node_cur.id}{x}.id})
-        #endif
+          disp(g.nodes{g.adjacencies{node_cur.id}{x}.id}.id)
+        endif
         
         if g.nodes{g.adjacencies{node_cur.id}{x}.id}.visited == 0 # not visited yet
-           cond = false;
           
             # Set current node to this
             node_cur = g.nodes{g.adjacencies{node_cur.id}{x}.id};
             path{steps} = node_cur;
             
-            disp("Found unvisited node with id")
+            disp("\t\t\tFound unvisited node with id")
             disp(node_cur.id)
             
             # drop node from to_visit list
@@ -128,20 +138,28 @@ endfor
             endif
             #disp("Flagging node as visited")
             g.nodes{node_cur.id}.visited = 1;
-            break
-            #crawl1(g,node_cur, cells_to_visit, steps);
+            
+            cond = 0
         else
-          disp("\t\t\tAlready visited node with id")
-          disp(g.adjacencies{node_cur.id}{x}.id)
+          disp("\t\t\tAlready visited node with this id")
+          disp("\t\t\tChecking if last")
+          # Check if last adj node
+          if x == size(g.adjacencies{node_cur.id},2)
+            disp("\t\t\tGot to the end of adj list. Backtracking!")
+            path{steps} = path{end-1};
+            node_cur = g.nodes{path{end}.id};
+            disp("\t\t\tSetting node")
+            disp(g.nodes{node_cur.id}.id)
+          else
+            disp("\t\t\tContinue")
+          endif
         endif
+        
         
       endfor
       # Should apply backtracking go back to previous path
-      steps++;
-      path{steps} = path{end-1}
-      node_cur = path{end-1}
       
-  #disp("STOP ITERATION")
+  disp("STOP ITERATION")
 endwhile
 
 

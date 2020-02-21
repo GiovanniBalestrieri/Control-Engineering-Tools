@@ -29,8 +29,8 @@ function crawl1(g,node_cur,cells_to_visit,steps, path)
             node_cur = g.nodes{g.adjacencies{node_cur.id}{x}.id};
             path{steps} = node_cur;
             
-            disp("Found unvisited node with id")
-            disp(node_cur.id)
+            #disp("Found unvisited node with id")
+            #disp(node_cur.id)
             
             # drop node from to_visit list
             index = vindex(cells_to_visit,node_cur);
@@ -39,12 +39,11 @@ function crawl1(g,node_cur,cells_to_visit,steps, path)
             endif
             #disp("Flagging node as visited")
             g.nodes{node_cur.id}.visited = 1;
-            break
-            #crawl1(g,node_cur, cells_to_visit, steps);
+            #break
+            crawl1(g,node_cur, cells_to_visit, steps);
         else
           disp("\t\t\tAlready visited node with id")
           disp(g.adjacencies{node_cur.id}{x}.id)
         endif
         
       endfor
-endfunction
