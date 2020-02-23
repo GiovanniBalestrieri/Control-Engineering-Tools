@@ -81,6 +81,7 @@ function Graph1 = populate_graph_from_ogrid(map)
           endif
         endfor
         
+       endif
     endfor
   endfor  
   disp("Graph created")
