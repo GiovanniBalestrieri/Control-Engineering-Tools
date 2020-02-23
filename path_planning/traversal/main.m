@@ -17,17 +17,19 @@ backtracking_step = 0;
 
 load maps
 
-map = [ 0, 1, 0 ,1, 0;
-        0, 0, 0 ,1, 0;
-        0, 1, 0 ,1, 0;
-        0, 0, 0 ,0, 2];
+map = [ 0, 1, 0 ,0 , 1, 0;
+        0, 1, 0 ,1 , 1, 0;
+        0, 0, 0 ,0 , 1, 0;
+        0, 1, 0 ,1 , 1, 0;
+        0, 0, 0 ,0 , 0, 2];
 #{
 map = [ 0, 1, 1 ,1, 0, 0, 0, 0, 0, 0;
         0, 1, 0 ,1, 0, 0, 0, 0, 0, 0;
         0, 1, 0 ,1, 0, 0, 0, 0, 0, 0;
         0, 0, 0 ,0, 0, 0, 0, 0, 0, 2];
 #}
-map = map3
+#map = map3
+
 
 # Create graph from grid
 g = {}
@@ -53,51 +55,22 @@ if index > 0
 endif
 
 while something_to_search(cells_to_visit)
-   
-  if verbosity == 1
-    disp("Iteration: ")
-    disp(steps)
-    disp("Current node:")
-    disp(g.nodes{node_cur.id}.id)
-    disp("Cells to Visit:")
-    for i=1:size(cells_to_visit,2)
-      if ~isempty(cells_to_visit{i})
-        disp(cells_to_visit{i}.id)
-      endif
-    endfor 
-  endif
   
   steps++;
-    
-  if verbosity == 1
-    disp("              Neighbors")
-    for x=1:size(g.adjacencies{node_cur.id},2)
-      disp(g.nodes{g.adjacencies{node_cur.id}{x}.id}.id)
-    endfor
-  endif
   
   cond = 1;
   for x=1:size(g.adjacencies{node_cur.id},2)
     if ~cond
       break
     endif
-  
-    if verbosity == 1
-      disp("        Checking Node : ")
-      disp(g.nodes{g.adjacencies{node_cur.id}{x}.id}.id)
-    endif
-    
+      
     # Check if node has been visited 
     if g.nodes{g.adjacencies{node_cur.id}{x}.id}.visited == 0 
         
         # Set current node
         node_cur = g.nodes{g.adjacencies{node_cur.id}{x}.id};
         path{steps} = node_cur;
-        
-        if verbosity == 1
-          disp("\t\t\tFound unvisited node with id")
-        endif
-        
+                
         # Drop node from to_visit list
         index = vindex(cells_to_visit,node_cur);
         if index > 0
@@ -112,16 +85,9 @@ while something_to_search(cells_to_visit)
         backtracking = 0;
     else
       
-      if verbosity == 1
-        disp("\t\t\tAlready visited node with this id")
-      endif
-      
       # Need to backtrack?
       if x == size(g.adjacencies{node_cur.id},2) && g.nodes{node_cur.id}.visited == 1
       
-        if verbosity == 1
-          disp("\t\t\tGot to the end of adj list. Backtracking!")
-        endif
         if backtracking_step == 0
           backtracking_step++;
         else
@@ -139,10 +105,6 @@ while something_to_search(cells_to_visit)
     endif        
   endfor      
 endwhile
-
-
-
-
 
 disp("Remaining Cells to Visit:")
 for i=1:size(cells_to_visit,2)
