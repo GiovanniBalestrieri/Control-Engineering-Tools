@@ -17,22 +17,16 @@ backtracking_step = 0;
 
 load maps
 
-map = [ 0, 1, 0 ,0 , 1, 0;
-        0, 1, 0 ,1 , 1, 0;
-        0, 0, 0 ,0 , 1, 0;
-        0, 1, 0 ,1 , 1, 0;
-        0, 0, 0 ,0 , 0, 2];
-#{
-map = [ 0, 1, 1 ,1, 0, 0, 0, 0, 0, 0;
-        0, 1, 0 ,1, 0, 0, 0, 0, 0, 0;
-        0, 1, 0 ,1, 0, 0, 0, 0, 0, 0;
-        0, 0, 0 ,0, 0, 0, 0, 0, 0, 2];
-#}
-#map = map3
+map = [ 1, 0, 1 ,          1, 1 ,1 ,1 ,1 ,      1, 1 ,1 ,1 ,1 ,   1, 1 ,1 ,1 ,1          , 1, 1, 1, 1, 1, 1   ;
+        1, 0, 1 ,          1, 1 ,1 ,1 ,1 ,      1, 1 ,1 ,1 ,1 ,   1, 1 ,1 ,1 ,1          , 1, 1, 1, 1, 1, 1   ;
+        0, 0, 0 ,          0 ,0 ,0 , 0, 0,      0 ,0 ,0 , 0, 0,   0 ,0 ,0 , 0, 0         , 0 ,0 ,0 , 0, 0, 0   ;
+        1, 0, 1 ,          1, 1 ,1 ,1 ,1 ,      1, 1 ,1 ,1 ,1 ,   1, 1 ,1 ,1 ,1          , 1, 1, 1, 1, 1, 1   ;
+        1, 2, 1 ,           1, 1 ,1 ,1 ,1 ,      1, 1 ,1 ,1 ,1 ,   1, 1 ,1 ,1 ,1         , 1, 1, 1, 1, 1, 1  ];
+
+# map = map3
 
 
 # Create graph from grid
-g = {}
 g = populate_graph_from_ogrid(map);
 
 
@@ -94,10 +88,10 @@ while something_to_search(cells_to_visit)
           backtracking_step += 2;
         endif
         
-        backtracking_step
+        backtracking_step;
         backtracking = 1;
         
-        disp(g.nodes{path{end-backtracking_step}.id})
+        #disp(g.nodes{path{end-backtracking_step}.id});
         node_cur = g.nodes{path{end-backtracking_step}.id};
         path{steps} = node_cur;
         
