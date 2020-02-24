@@ -1,125 +1,89 @@
+# Future Work 1: Check for Forests before starting
 clear all
 clc
-# Future Work 1: Check for Forests before starting
 ###################################################
-# Utility variables
+#     Step 0: from Grid to Graph
 ###################################################
-plotting = false
-verbosity = 1
+load maps
+map = map3
+global g
+
+g = populate_graph_from_ogrid(map);
+disp("Number of obstacles")
+disp(g.obstacles)
+disp(g.nodes{2})
+
 ###################################################
-# Path Planning
+#     Step 2: Naive approach - DFS
 ###################################################
+clc
+disp("Testing simple maps")
+map = [ 0, 0, 1 , 0;
+          0, 0, 1 , 0;
+          0, 0, 0 , 2];
+g = populate_graph_from_ogrid(map);
+
+disp("Perform a Depth First Search - DFS")
+
+# Init node whishlist
+global cells_to_visit
+global visited
+cells_to_visit = {};
+visited = {};
+for i=1:size(g.nodes,2)
+  cells_to_visit{i} = g.nodes{i};
+  visited{i} = false;
+endfor
+
+dfs(g.start.id)
+disp(g.id_table)
+
+# DFS does not provide a valid path
+# Consecutive nodes in the path should be adjacent nodes
+
+###################################################
+#     Step 3: Inspect the parcour
+###################################################
+
+# Reset path 
+path = {}; 
+cells_to_visit = {};
+visited = {};
+for i=1:size(g.nodes,2)
+  cells_to_visit{i} = g.nodes{i};
+  visited{i} = false;
+endfor
+
 cost_fcn = 0;
 k1 = 1;
 k2 = 0;
-backtracking = 0;
-backtracking_step = 0;
 
-load maps
+# Search graph 
+path = search(g);
 
-problem_map_1 = [ 1, 0, 1 ,          1, 1 ,1 ,1 ,1 ,        1, 1, 1, 1, 1          , 1, 1, 1, 1, 1, 1   ;
-                  1, 0, 1 ,          1, 1 ,1 ,1 ,1 ,        1, 1, 1, 1, 1          , 1, 1, 1, 1, 1, 1   ;
-                  0, 0, 0 ,          0 ,0 ,0 , 0, 0,        0, 0, 0, 0, 0         , 0 ,0 ,0 , 0, 0, 0   ;
-                  0, 0, 0 ,          0 ,0 ,0 , 0, 0,        0, 0, 0, 0, 0         , 0 ,0 ,0 , 0, 0, 0   ;
-                  1, 0, 1 ,          1, 1 ,1 ,1 ,1 ,        1, 1, 1, 1, 1          , 1, 1, 1, 1, 1, 1   ;
-                  1, 2, 1 ,          1, 1 ,1 ,1 ,1 ,        1, 1, 1, 1, 1         , 1, 1, 1, 1, 1, 1  ];
+###################################################
+#     Step 4: What do we have so far?
+###################################################
 
-
-problem_map_2 = [ 0, 0, 0 , 0;
-                  0, 0, 0 , 0;
-                  0, 1, 1 , 1;
-                  0, 0, 0 , 0;
-                  0, 0, 0 , 2];
-
-map = problem_map_2;        
-# map = map3
-
-# Create graph from grid
-g = populate_graph_from_ogrid(map);
-
-
-cells_to_visit = {};
-path = {}; # stores the result
-for i=1:size(g.nodes,2)
-  cells_to_visit{i} = g.nodes{i};
-endfor
-
-steps = 1;
-# Step 0: Start from Source
-path{steps} = g.start;
-node_cur = g.start;
-# set it to visited in the nodes list struct of the graph
-g.nodes{g.start.id}.visited = 1;
-# remove start node form to_visit
-index = vindex(cells_to_visit,node_cur);
-if index > 0
-  cells_to_visit{index} = [];
-endif
-
-while something_to_search(cells_to_visit)
-  
-  steps++;
-  
-  cond = 1;
-  for x=1:size(g.adjacencies{node_cur.id},2)
-    if ~cond
-      break
-    endif
-      
-    # Check if node has been visited 
-    if g.nodes{g.adjacencies{node_cur.id}{x}.id}.visited == 0 
-        
-        # Set current node
-        node_cur = g.nodes{g.adjacencies{node_cur.id}{x}.id};
-        path{steps} = node_cur;
-                
-        # Drop node from to_visit list
-        index = vindex(cells_to_visit,node_cur);
-        if index > 0
-          cells_to_visit{index} = [];
-        endif
-        
-        # Flagging node as visited
-        g.nodes{node_cur.id}.visited = 1;
-        
-        cond = 0;
-        backtracking_step = 0;
-        backtracking = 0;
-    else
-      
-      # Need to backtrack?
-      if x == size(g.adjacencies{node_cur.id},2) && g.nodes{node_cur.id}.visited == 1
-      
-        if backtracking_step == 0
-          backtracking_step++;
-        else
-          backtracking_step += 2;
-        endif
-        
-        backtracking_step;
-        backtracking = 1;
-        
-        #disp(g.nodes{path{end-backtracking_step}.id});
-        node_cur = g.nodes{path{end-backtracking_step}.id};
-        path{steps} = node_cur;
-        
-      endif
-    endif        
-  endfor      
-endwhile
+# A "sub-optimal" coverage path planning algorithm
+# Let's see the results obtained so far
+clc
+disp(map)
 
 disp("Remaining Cells to Visit:")
 for i=1:size(cells_to_visit,2)
   if ~isempty(cells_to_visit{i})
     disp(cells_to_visit{i}.id)
   endif
-endfor 
+endfor
 
 disp("Path")
 ids_path = zeros(1,size(path,2));
 for i=1:size(path,2)
   disp(path{i}.id)
   ids_path(1,i) = path{i}.id;
+  #disp(path{i}.x);
+  #disp(path{i}.y);
 endfor 
 
 disp("Cost function") 
@@ -134,3 +98,79 @@ disp("Saving data")
 csvwrite("current_map.csv",map);
 csvwrite("map_id.csv",g.id_table);
 csvwrite("path.csv",ids_path);
+
+###################################################
+#     Step 6: Considering test maps
+###################################################
+map = map3
+g = {}
+g = populate_graph_from_ogrid(map);
+
+# Reset path
+path = {}; 
+cells_to_visit = {};
+visited = {};
+for i=1:size(g.nodes,2)
+  cells_to_visit{i} = g.nodes{i};
+  visited{i} = false;
+endfor
+
+# Compute path
+path = search(g);
+
+
+# Save data
+csvwrite("current_map.csv",map);
+csvwrite("map_id.csv",g.id_table);
+
+ids_path = zeros(1,size(path,2));
+for i=1:size(path,2)
+  disp(path{i}.id)
+  ids_path(1,i) = path{i}.id;
+endfor 
+csvwrite("path.csv",ids_path);
+
+###################################################
+#     Step 6: Considering tricky parcours
+###################################################
+
+problematic_map_1 = [ 1, 0, 1 ,          1, 1 ,1 ,1 ,1 ,        1, 1, 1, 1, 1          , 1, 1, 1, 1, 1, 1   ;
+                      1, 0, 1 ,          1, 1 ,1 ,1 ,1 ,        1, 1, 1, 1, 1          , 1, 1, 1, 1, 1, 1   ;
+                      0, 0, 0 ,          0 ,0 ,0 , 0, 0,        0, 0, 0, 0, 0         , 0 ,0 ,0 , 0, 0, 0   ;
+                      1, 0, 1 ,          1, 1 ,1 ,1 ,1 ,        1, 1, 1, 1, 1          , 1, 1, 1, 1, 1, 1   ;
+                      1, 2, 1 ,          1, 1 ,1 ,1 ,1 ,        1, 1, 1, 1, 1         , 1, 1, 1, 1, 1, 1  ];
+
+
+problematic_map_2 = [ 0, 0, 0 , 0;
+                  0, 0, 0 , 0;
+                  0, 1, 1 , 1;
+                  0, 0, 0 , 0;
+                  0, 0, 0 , 2];
+                  
+map = problematic_map_1
+g = {}
+g = populate_graph_from_ogrid(map);
+
+# Reset path
+path = {}; 
+cells_to_visit = {};
+visited = {};
+for i=1:size(g.nodes,2)
+  cells_to_visit{i} = g.nodes{i};
+  visited{i} = false;
+endfor
+
+# Compute path
+path = search(g);
+
+
+# Save data
+csvwrite("current_map.csv",map);
+csvwrite("map_id.csv",g.id_table);
+
+ids_path = zeros(1,size(path,2));
+for i=1:size(path,2)
+  disp(path{i}.id)
+  ids_path(1,i) = path{i}.id;
+endfor 
+csvwrite("path.csv",ids_path);            
