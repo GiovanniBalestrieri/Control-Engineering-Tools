@@ -1,17 +1,40 @@
+################################################################################
+#
+# The following function creates a graph structure with 4 field names 
+# from a two dimensional array map. map(i,j) € {"0","1","2) for free,obstacle
+# and starting point
+#
+################################################################################
+#
+#                             Graph structure 
+#
+# graph.obstacles     Total # obstacles in the map
+# graph.nodes         Cell array containing Node structure
+#                      
+#                       A node is a structure defined as follows
+#                       NodeX = struct("id",id,"x",i,"y",j,"visited",0);
+#
+# graph.adjacencies   Cell array containing the adjacent nodes structures
+#                     (soon the id of the node) for each node in graph.nodes 
+# graph.id_table      Bidimenstional array with id of the corresponding cell
+#
+################################################################################
 
 function Graph1 = populate_graph_from_ogrid(map)
-  id_table = zeros(rows(map),columns(map));
   Graph1 = struct();
   Graph1.obstacles = 0;
   Graph1.nodes = {};
   Graph1.adjacencies = {};
-
-  # First loops through all cells and fill the table ids
-  number_err = 0;
+    
+  # Storing neighboring coordinates
+  x_coords = {-1, 1, 0, 0};
+  y_coords = {0, 0, 1, -1};
+  
+  # Initializing id table
+  id_table = zeros(rows(map),columns(map));
   id = 1;
   
-  disp("Analyzing Nodes ")
-  
+  # Analyzing Nodes
   for i=1:rows(map)
     for j=1:columns(map)
       # Create a node structure for each empty cell
@@ -20,20 +43,22 @@ function Graph1 = populate_graph_from_ogrid(map)
         Graph1.nodes{id} = NodeX;
         id_table(i,j) = id;
         
-        # Flags the starting point
+        # Found it! Flagging the starting point
         if map(i,j) == 2
           Graph1.start = NodeX;
         endif
-        id++;
         
+        id++;        
       else
         Graph1.obstacles++;
       endif
     endfor
   endfor
   
-  disp("Analyzing Connections ")
+  # Ready to store id table
+  Graph1.id_table = id_table;
   
+  # Analyzing Connections  
   for i=1:rows(map)
     for j=1:columns(map)
     
@@ -43,62 +68,21 @@ function Graph1 = populate_graph_from_ogrid(map)
         id_cur = id_table(i,j);  
         
         Graph1.adjacencies{id_cur} = {};
-        adj_id = 1;
-         
-        # Update adjacency list using 4 neighbors 
-        try
-          if i-1 > 0 && map(i-1,j) != 1      
-            id_point = id_table(i-1, j);
-            NodeXX = struct("id",id_point,"x",i-1,"y",j,"visited",0);
-            Graph1.adjacencies{id_cur}{adj_id} = NodeXX;
-            adj_id++;
-          endif
-        catch
-          number_err++;
-          disp("Err i -1")
-        end_try_catch
+        adj_id_new = 1;
         
-        try
-          if i+1 <= rows(map) && map(i+1,j) != 1
-            id_point = id_table(i+1, j);
-            NodeXX = struct("id",id_point,"x",i+1,"y",j,"visited",0);
-            Graph1.adjacencies{id_cur}{adj_id} = NodeXX;
-            adj_id++;
+        for i_i=1:size(x_coords,2)
+          if i+x_coords{i_i} > 0 && i+x_coords{i_i} <= rows(map) && j+y_coords{i_i} <= columns(map) && j+y_coords{i_i} > 0
+            if map(i+x_coords{i_i},j+y_coords{i_i}) != 1   
+              id_point = id_table(i+x_coords{i_i}, j+y_coords{i_i});
+              NodeXX = struct("id",id_point,"x",i+x_coords{i_i},"y",j+y_coords{i_i},"visited",0);
+              Graph1.adjacencies{id_cur}{adj_id_new} = NodeXX;
+              adj_id_new++;          
+            endif
           endif
-        catch
-          number_err++;
-          disp("Err i + 1")
-        end_try_catch
+        endfor
         
-        try
-          if j-1 > 0 && map(i,j-1) != 1 
-            id_point = id_table(i, j-1);
-            NodeXX = struct("id",id_point,"x",i,"y",j-1,"visited",0);
-            Graph1.adjacencies{id_cur}{adj_id} = NodeXX;
-            adj_id++;          
-          endif
-        catch
-          number_err++;
-          disp("Err J -1")
-        end_try_catch
-        
-        try
-          if j+1 <= columns(map) && map(i,j+1) != 1  
-            id_point = id_table(i, j+1);
-            NodeXX = struct("id",id_point,"x",i,"y",j+1,"visited",0);
-            Graph1.adjacencies{id_cur}{adj_id} = NodeXX;
-            adj_id++;
-          endif
-        catch
-          number_err++;
-          disp("Err J -1")
-        end_try_catch
-      endif      
+       endif
     endfor
-  endfor
-  
-  Graph1.num_err = number_err;
-  Graph1.id_table = id_table;
-  
+  endfor  
   disp("Graph created")
 endfunction
