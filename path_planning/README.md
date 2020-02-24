@@ -29,7 +29,7 @@ Biological and Environmental Engineering, The University of Tokyo.
 * mCPP | multi Coverage Path Planning algorithm
 https://github.com/athakapo/DARP
 
-DARP algorithm divides the terrain into a number of equal areas each corresponding to a specific robot, so as to guarantee complete coverage, non-backtracking solution, minimum coverage path, while at the same time does not need any preparatory stage.
+  DARP algorithm divides the terrain into a number of equal areas each corresponding to a specific robot, so as to guarantee complete coverage, non-backtracking solution, minimum coverage path, while at the same time does not need any preparatory stage.
 http://kapoutsis.info/?page_id=25
 https://www.youtube.com/watch?v=LrGfvma
 
