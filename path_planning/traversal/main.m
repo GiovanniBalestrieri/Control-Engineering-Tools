@@ -150,7 +150,11 @@ problematic_map_2 = [ 0, 0, 0 , 0;
                   0, 0, 0 , 0;
                   0, 0, 0 , 2];
                   
-map = problematic_map_1
+problematic_map_3 = [ 0, 0, 0 , 0, 0;
+                      1, 1, 1 , 1 ,0;             
+                      0, 0, 0 , 2, 0];
+                  
+map = problematic_map_3
 g = {}
 g = populate_graph_from_ogrid(map);
 
@@ -189,9 +193,6 @@ csvwrite("path.csv",ids_path);
 # The main idea here is to select between all possible adjacent nodes, the one 
 # that has less nodes linked to it. 
 
-problematic_map_3 = [ 0, 0, 0 , 0, 0;
-                      1, 1, 1 , 1 ,0;             
-                      0, 0, 0 , 2, 0];
 map = problematic_map_3;
 # Let's consider problematic_map_3. From the start the alg has two options.
 # On the right we have 7 nodes and on the left only 3. If the alg selects the 

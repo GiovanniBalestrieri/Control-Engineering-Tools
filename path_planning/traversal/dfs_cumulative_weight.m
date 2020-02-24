@@ -8,15 +8,9 @@ function dfs_cumulative_weight(pos)
     return;
   endif
   
-  # Print the id 
-  #disp("Node: ")
-  #disp(g.nodes{pos}.id)  
   # Flag current node as visited
   visited_bis{pos} = 1;
   count_bis += 1;
-  
-  #disp("Adj node: ");
-  #disp(count_bis)
   
   # Call recursively itself for each adjacent node
   for x=1:size(g.adjacencies{pos},2)

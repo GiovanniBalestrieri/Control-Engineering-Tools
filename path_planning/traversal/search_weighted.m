@@ -43,7 +43,7 @@ function path = search_weighted(g)
     # Loop through adjacent nodes
     for x=1:size(g.adjacencies{node_cur.id},2)
       
-      [val, idx] = min(adj_weight)
+      [val, idx] = min(adj_weight);
       adj_weight(1,idx) += 100000;
       x = idx;
       if ~cond
