@@ -17,15 +17,22 @@ backtracking_step = 0;
 
 load maps
 
-map = [ 1, 0, 1 ,          1, 1 ,1 ,1 ,1 ,      1, 1 ,1 ,1 ,1 ,   1, 1 ,1 ,1 ,1          , 1, 1, 1, 1, 1, 1   ;
-        1, 0, 1 ,          1, 1 ,1 ,1 ,1 ,      1, 1 ,1 ,1 ,1 ,   1, 1 ,1 ,1 ,1          , 1, 1, 1, 1, 1, 1   ;
-        0, 0, 0 ,          0 ,0 ,0 , 0, 0,      0 ,0 ,0 , 0, 0,   0 ,0 ,0 , 0, 0         , 0 ,0 ,0 , 0, 0, 0   ;
-        0, 0, 0 ,          0 ,0 ,0 , 0, 0,      0 ,0 ,0 , 0, 0,   0 ,0 ,0 , 0, 0         , 0 ,0 ,0 , 0, 0, 0   ;
-        1, 0, 1 ,          1, 1 ,1 ,1 ,1 ,      1, 1 ,1 ,1 ,1 ,   1, 1 ,1 ,1 ,1          , 1, 1, 1, 1, 1, 1   ;
-        1, 2, 1 ,           1, 1 ,1 ,1 ,1 ,      1, 1 ,1 ,1 ,1 ,   1, 1 ,1 ,1 ,1         , 1, 1, 1, 1, 1, 1  ];
+problem_map_1 = [ 1, 0, 1 ,          1, 1 ,1 ,1 ,1 ,        1, 1, 1, 1, 1          , 1, 1, 1, 1, 1, 1   ;
+                  1, 0, 1 ,          1, 1 ,1 ,1 ,1 ,        1, 1, 1, 1, 1          , 1, 1, 1, 1, 1, 1   ;
+                  0, 0, 0 ,          0 ,0 ,0 , 0, 0,        0, 0, 0, 0, 0         , 0 ,0 ,0 , 0, 0, 0   ;
+                  0, 0, 0 ,          0 ,0 ,0 , 0, 0,        0, 0, 0, 0, 0         , 0 ,0 ,0 , 0, 0, 0   ;
+                  1, 0, 1 ,          1, 1 ,1 ,1 ,1 ,        1, 1, 1, 1, 1          , 1, 1, 1, 1, 1, 1   ;
+                  1, 2, 1 ,          1, 1 ,1 ,1 ,1 ,        1, 1, 1, 1, 1         , 1, 1, 1, 1, 1, 1  ];
 
+
+problem_map_2 = [ 0, 0, 0 , 0;
+                  0, 0, 0 , 0;
+                  0, 1, 1 , 1;
+                  0, 0, 0 , 0;
+                  0, 0, 0 , 2];
+
+map = problem_map_2;        
 # map = map3
-
 
 # Create graph from grid
 g = populate_graph_from_ogrid(map);
@@ -109,8 +116,10 @@ for i=1:size(cells_to_visit,2)
 endfor 
 
 disp("Path")
+ids_path = zeros(1,size(path,2));
 for i=1:size(path,2)
   disp(path{i}.id)
+  ids_path(1,i) = path{i}.id;
 endfor 
 
 disp("Cost function") 
@@ -120,3 +129,8 @@ disp(g.id_table)
 
 disp("Number of cells")
 disp(rows(map)*columns(map))
+
+disp("Saving data")
+csvwrite("current_map.csv",map);
+csvwrite("map_id.csv",g.id_table);
+csvwrite("path.csv",ids_path);
