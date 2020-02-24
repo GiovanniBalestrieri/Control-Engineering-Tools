@@ -31,7 +31,9 @@ Biological and Environmental Engineering, The University of Tokyo.
   DARP algorithm divides the terrain into a number of equal areas each corresponding to a specific robot, so as to guarantee complete coverage, non-backtracking solution, minimum coverage path, while at the same time does not need any preparatory stage.
 
   Repo:     https://github.com/athakapo/DARP
+
   Link:     http://kapoutsis.info/?page_id=25
+
   Youtube:  https://www.youtube.com/watch?v=LrGfvma
 
 * Algorithmic Foundations of Robotics V
