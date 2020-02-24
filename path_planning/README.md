@@ -41,5 +41,8 @@ How to get a path from a Minimum Spanning Tree. MST obtained using Prim or Krusk
 
 ### Other Links
 
+* Python robotics arsenal:
+  https://github.com/AtsushiSakai/PythonRobotics 
+
 * 3D maps of Glasgow Golf clubs 
 https://www.williamwoodgc.co.uk/course-1.html
