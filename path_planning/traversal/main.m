@@ -154,7 +154,7 @@ problematic_map_3 = [ 0, 0, 0 , 0, 0;
                       1, 1, 1 , 1 ,0;             
                       0, 0, 0 , 2, 0];
                   
-map = problematic_map_3
+map = map3
 g = {}
 g = populate_graph_from_ogrid(map);
 

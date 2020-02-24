@@ -40,6 +40,7 @@ function path = search_weighted(g)
     
     
     [val, idx] = min(adj_weight);
+    
     # Loop through adjacent nodes
     for x=1:size(g.adjacencies{node_cur.id},2)
       
