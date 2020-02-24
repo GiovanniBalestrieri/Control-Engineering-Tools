@@ -28,6 +28,9 @@ disp("Perform a Depth First Search - DFS")
 # Init node whishlist
 global cells_to_visit
 global visited
+global visited_bis
+global count_bis
+
 cells_to_visit = {};
 visited = {};
 for i=1:size(g.nodes,2)
@@ -102,7 +105,7 @@ csvwrite("path.csv",ids_path);
 ###################################################
 #     Step 6: Considering test maps
 ###################################################
-map = map3
+map = map1
 g = {}
 g = populate_graph_from_ogrid(map);
 
@@ -173,4 +176,70 @@ for i=1:size(path,2)
   disp(path{i}.id)
   ids_path(1,i) = path{i}.id;
 endfor 
-csvwrite("path.csv",ids_path);            
+csvwrite("path.csv",ids_path);     
+
+## We have found a problematic behaviour. The Alg does not take into account
+# any heuristic while choosing the next node to analyze
+
+
+#################################################################
+#     Step 7: Adding a cumulative weight computation
+#################################################################
+
+# The main idea here is to select between all possible adjacent nodes, the one 
+# that has less nodes linked to it. 
+
+problematic_map_3 = [ 0, 0, 0 , 0, 0;
+                      1, 1, 1 , 1 ,0;             
+                      0, 0, 0 , 2, 0];
+map = problematic_map_3;
+# Let's consider problematic_map_3. From the start the alg has two options.
+# On the right we have 7 nodes and on the left only 3. If the alg selects the 
+# right cell, it will be required to  backtrack all 7 nodes in order to cover 
+# the last three remaining cells. So the idea is to select the adjacent node 
+# which has the minimum number of nodes connected to it indirectly
+
+g = {}
+g = populate_graph_from_ogrid(map);
+
+
+# Reset path
+path = {}; 
+cells_to_visit = {};
+visited = {};
+for i=1:size(g.nodes,2)
+  cells_to_visit{i} = g.nodes{i};
+  visited{i} = false;
+endfor
+
+visited_bis = visited;
+visited_bis{g.start.id} = 1
+# Loop through adjacent nodes
+
+#{
+adj_weight = zeros(1,size(g.adjacencies{g.start.id},2))
+for x=1:size(g.adjacencies{g.start.id},2)
+  # New: Check cumulative node sum of all reachable and never visited nodes
+  # from the current position
+  count_bis = 0;
+  #disp(" Source Node: ")
+  #disp(g.adjacencies{g.start.id}{x}.id)
+  
+  dfs_cumulative_weight(g.adjacencies{g.start.id}{x}.id);
+  adj_weight(1,x) = count_bis;
+endfor
+#}
+
+# Compute path
+path = search_weighted(g);
+
+# Save data
+csvwrite("current_map.csv",map);
+csvwrite("map_id.csv",g.id_table);
+
+ids_path = zeros(1,size(path,2));
+for i=1:size(path,2)
+  disp(path{i}.id)
+  ids_path(1,i) = path{i}.id;
+endfor 
+csvwrite("path.csv",ids_path);     
